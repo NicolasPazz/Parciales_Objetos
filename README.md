@@ -35,4 +35,6 @@ cuando llegamos a la cantidad de personas requerida, el tour se confirma y no se
 Queremos saber:
 Qué tours están pendientes de confirmación: son los que tienen menos cantidad de personas anotadas de las que el tour requiere.
 Cuál es el total de los tours que salen este año, considerando el monto por persona * la cantidad de personas.
+
+
 Se considerará explícitamente la delegación y la implementación de soluciones declarativas.
