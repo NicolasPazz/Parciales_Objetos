@@ -32,27 +32,27 @@ describe "Ciudades" {
 
 describe "Pueblos" { 
   test "Un pueblo no es divertido si no tiene una cantidad par de letras en su nombre" {
-    const pueblo = new Pueblo(nombre = "Rosario", kilometros = 11, anioFundacion = 2000, provincia = "Buenos Aires")
+    const pueblo = new Pueblo(nombre = "Rosario", anioFundacion = 2000, provincia = "Buenos Aires")
     assert.notThat(pueblo.esDivertido())
   }
 
   test "Un pueblo es divertido si además de tener nombre par, es del litoral" {
-    const puebloDelLitoral = new Pueblo(nombre = "Pueblo Litoral", kilometros = 11, anioFundacion = 2000, provincia = "Corrientes")
+    const puebloDelLitoral = new Pueblo(nombre = "Pueblo Litoral", anioFundacion = 2000, provincia = "Corrientes")
     assert.that(puebloDelLitoral.esDivertido())
   }
 
   test "Un pueblo no es divertido si no es del litoral" {
-    const puebloDelSur = new Pueblo(nombre = "Pueblo Sur", kilometros = 11, anioFundacion = 2000, provincia = "Tierra del fuego")
+    const puebloDelSur = new Pueblo(nombre = "Pueblo Sur", anioFundacion = 2000, provincia = "Tierra del fuego")
     assert.notThat(puebloDelSur.esDivertido())
   }
 
   test "Un pueblo es divertido si fue fundado antes de cierto año" {
-    const puebloViejo = new Pueblo(nombre = "Pueblo Chico", kilometros = 11, anioFundacion = 1700, provincia = "Buenos Aires")
+    const puebloViejo = new Pueblo(nombre = "Pueblo Chico", anioFundacion = 1700, provincia = "Buenos Aires")
     assert.that(puebloViejo.esDivertido())
   }
 
   test "Un pueblo no es divertido si es joven" {
-    const puebloJoven = new Pueblo(nombre = "Pueblo Joven", kilometros = 11, anioFundacion = 2000, provincia = "Buenos Aires")
+    const puebloJoven = new Pueblo(nombre = "Pueblo Joven", anioFundacion = 2000, provincia = "Buenos Aires")
     assert.notThat(puebloJoven.esDivertido())
   }
 }
