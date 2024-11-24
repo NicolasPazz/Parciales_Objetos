@@ -1,0 +1,85 @@
+import vacaciones.*
+
+describe "Ciudades" {
+  const muchosHabitantes = 120000
+  const muchasAtracciones = #{"Obelisco", "Casa Rosada", "San Telmo", "Caminito"}
+
+  test "Una ciudad es divertida si tiene una cantidad par de letras en su nombre" {
+    const ciudad = new Ciudad(nombre = "Buenos Aires", atracciones = muchasAtracciones, habitantes = muchosHabitantes, decibelesPromedio = 0)
+    assert.that(ciudad.esDivertido())
+  }
+  
+  test "Una ciudad no es divertida si no tiene una cantidad par de letras en su nombre" {
+    const ciudad = new Ciudad(nombre = "Rosario", atracciones = muchasAtracciones, habitantes = muchosHabitantes, decibelesPromedio = 0)
+    assert.notThat(ciudad.esDivertido())
+  }
+  
+  test "Una ciudad es divertida si tiene nombre par, tiene muchas atracciones y tiene muchos habitantes" {
+    const ciudad = new Ciudad(nombre = "Buenos Aires", atracciones = muchasAtracciones, habitantes = muchosHabitantes, decibelesPromedio = 0)
+    assert.that(ciudad.esDivertido())
+  }
+
+  test "Una ciudad no es divertida si no tiene muchas atracciones" {
+    const ciudad = new Ciudad(nombre = "Buenos Aires", atracciones = #{"Obelisco"}, habitantes = muchosHabitantes, decibelesPromedio = 0)
+    assert.notThat(ciudad.esDivertido())
+  }
+  
+  test "Una ciudad no es divertida si no tiene muchos habitantes" {
+    const ciudad = new Ciudad(nombre = "Buenos Aires", atracciones = muchasAtracciones, habitantes = 0, decibelesPromedio = 0)
+    assert.notThat(ciudad.esDivertido())
+  }
+}
+
+describe "Pueblos" { 
+  test "Un pueblo no es divertido si no tiene una cantidad par de letras en su nombre" {
+    const pueblo = new Pueblo(nombre = "Rosario", kilometros = 11, anioFundacion = 2000, provincia = "Buenos Aires")
+    assert.notThat(pueblo.esDivertido())
+  }
+
+  test "Un pueblo es divertido si además de tener nombre par, es del litoral" {
+    const puebloDelLitoral = new Pueblo(nombre = "Pueblo Litoral", kilometros = 11, anioFundacion = 2000, provincia = "Corrientes")
+    assert.that(puebloDelLitoral.esDivertido())
+  }
+
+  test "Un pueblo no es divertido si no es del litoral" {
+    const puebloDelSur = new Pueblo(nombre = "Pueblo Sur", kilometros = 11, anioFundacion = 2000, provincia = "Tierra del fuego")
+    assert.notThat(puebloDelSur.esDivertido())
+  }
+
+  test "Un pueblo es divertido si fue fundado antes de cierto año" {
+    const puebloViejo = new Pueblo(nombre = "Pueblo Chico", kilometros = 11, anioFundacion = 1700, provincia = "Buenos Aires")
+    assert.that(puebloViejo.esDivertido())
+  }
+
+  test "Un pueblo no es divertido si es joven" {
+    const puebloJoven = new Pueblo(nombre = "Pueblo Joven", kilometros = 11, anioFundacion = 2000, provincia = "Buenos Aires")
+    assert.notThat(puebloJoven.esDivertido())
+  }
+}
+
+describe "Balnearios" {
+  test "Un balneario es divertido si tiene una cantidad par de letras en su nombre" {
+    const balneario = new Balneario(nombre = "Buenos Aires", metrosDePlayaPromedio = 500, marEsPeligroso = true, tienePeatonal = false)
+    assert.that(balneario.esDivertido())
+  }
+
+  test "Un balneario no es divertido si no tiene una cantidad par de letras en su nombre" {
+    const balneario = new Balneario(nombre = "Rosario", metrosDePlayaPromedio = 0, tienePeatonal = false, marEsPeligroso = true)
+    assert.notThat(balneario.esDivertido())
+  }
+
+  test "Un balneario es divertido si además de tener nombre par, tiene mar peligroso y muchos kilometros de playa" {
+    const balneario = new Balneario(nombre = "Buenos Aires", metrosDePlayaPromedio = 500, marEsPeligroso = true, tienePeatonal = false)
+    assert.that(balneario.esDivertido())
+  }
+
+  test "Un balneario no es divertido si no tiene mar peligroso pero tiene muchos kilometros de playa" {
+    const balneario = new Balneario(nombre = "Buenos Aires", metrosDePlayaPromedio = 500, marEsPeligroso = false, tienePeatonal = false)
+    assert.notThat(balneario.esDivertido())
+  }
+  
+  test "Un balneario no es divertido si no muchos metros de playa" {
+    const balneario = new Balneario(nombre = "Buenos Aires", metrosDePlayaPromedio = 0, marEsPeligroso = true, tienePeatonal = false)
+    assert.notThat(balneario.esDivertido())
+  }
+}

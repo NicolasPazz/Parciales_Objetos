@@ -5,10 +5,11 @@ class Lugar{
   method cantidadDeLetras() = nombre.length()
   method nombrePar() = self.cantidadDeLetras().even()
 
-  method esDivertido () = self.nombrePar() && self.condicionParticular()
+  method esDivertido () = self.nombrePar() && self.condicionParaSerDivertido()
+  method condicionParaSerDivertido()
 
-  method condicionParticular()
   method esTranquilo()
+  method esRaro() = self.cantidadDeLetras() > 10
 }
 
 class Ciudad inherits Lugar{
@@ -16,22 +17,22 @@ class Ciudad inherits Lugar{
   const atracciones
   const decibelesPromedio
 
-  method cantidadDeAtraccionesMayorA(cantidad) = atracciones > cantidad
-  method cantidadDeHabitantesMayorA(cantidad) = habitantes > cantidad
+  method tieneMuchasAtracciones() = atracciones.size() > 3
+  method tieneMuchosHabitantes() = habitantes > 100000
 
-  override method condicionParticular() = self.cantidadDeAtraccionesMayorA(3) && self.cantidadDeHabitantesMayorA(100000)
+  override method condicionParaSerDivertido() = self.tieneMuchasAtracciones() && self.tieneMuchosHabitantes()
   override method esTranquilo() = decibelesPromedio < 20
 }
 
 class Pueblo inherits Lugar{
   const anioFundacion
   const provincia
-  const kilometros2
+  const kilometros
+  
+  method fundadoAntesDel1800() = anioFundacion < 1800
+  method esDelLitoral() = (#{"Corrientes", "Entre Rios", "Santa Fe"}).contains(provincia)
 
-  method fundadoAntesDe(anio) = anioFundacion < anio
-  method esDelLitoral() = provincia == "Entre Rios" || provincia == "Corrientes" || provincia == "Misiones"
-
-  override method condicionParticular() = self.fundadoAntesDe(1800) && self.esDelLitoral()
+  override method condicionParaSerDivertido() = self.esDelLitoral() || self.fundadoAntesDel1800()
   override method esTranquilo() = provincia == "La Pampa"
 }
 
@@ -40,38 +41,46 @@ class Balneario inherits Lugar{
   const marEsPeligroso
   const tienePeatonal
 
-  method playaMayorA(metros) = metrosDePlayaPromedio > metros
+  method playaGrande() = metrosDePlayaPromedio > 300
 
-  override method condicionParticular() = self.playaMayorA(300) && marEsPeligroso
+  override method condicionParaSerDivertido() = self.playaGrande() && marEsPeligroso
   override method esTranquilo() = !tienePeatonal
 }
 
 
 // PUNTO 2
 object tranquilo{
-  method iriaAEse(lugar) = lugar.esTranquilo()
+  method iriaAEseLugar(lugar) = lugar.esTranquilo()
 }
 object divertido{
-  method iriaAEse(lugar) = !lugar.esTranquilo()
+  method iriaAEseLugar(lugar) = lugar.esDivertido()
 }
 object raro{
-  method iriaAEse(lugar) = self.esRaro(lugar)
-  method esRaro(lugar) = lugar.cantidadDeLetras() > 10
+  method iriaAEseLugar(lugar) = lugar.esRaro(lugar)
 }
 
-class Persona{
-  const preferencia // set de preferencias
-  const presupuestoVacaciones
-  const porCuantaPlataMeBajo
+class Persona {
+  const preferencia
+  const presuepuestoMaximo
 
-  method iriaAEse(lugar) = preferencia.any({preferencia => preferencia.iriaAEse(lugar)})
-  method iriaAEsas(lugares) = lugares.all({lugar => self.iriaAEse(lugar)})
-  method precioEsAcorde(precio) = precio <= presupuestoVacaciones
-  method lePareceBien(precio, ciudades) = 
-    if (!self.precioEsAcorde(precio) || !self.iriaAEsas(ciudades)) {
-      throw new Exception(message = "El precio se me va de las manos o no me gusta alguna ciudad, no me sumo, gracias")
-    }
-  method meQuieroBajar(plata) = plata >= porCuantaPlataMeBajo
+  method iriaALugar(lugar) = preferencia.iriaALugar(lugar)
+
+  method reiniciarPreferencias() = preferencia.reiniciarPreferencias()
+
+  method puedePagar(monto) = monto <= presuepuestoMaximo
+}
+
+// Composite
+class CombinacionDePreferencias { 
+  const preferencias = #{}
+
+  method agregarPreferencia(preferencia) = preferencias.add(preferencia)
+
+  method removerPreferencia(preferencia) = preferencias.remove(preferencia)
+
+  method reiniciarPreferencias() = preferencias.clear()
+
+  method iriaALugar(lugar) = preferencias.any({ preferencia => preferencia.iriaALugar(lugar) })
 }
 
 
@@ -80,42 +89,60 @@ class Tour{
   const fechaDeSalida
   const personasRequeridas
   const ciudades // lista
-  const precioPorPersona
+  const precio
   const personasConfirmadas // set
 
-  method hayLugar(plata) =
-    if (personasConfirmadas.size() == personasRequeridas && !self.alguienSeQuiereBajar(plata)) {
-      throw new Exception(message = "El bondi esta lleno, no se puede sumar nadie mas")
+  method hayLugar() {
+    if (self.tourCompleto()) {
+      throw new DomainException(message = "Se llego al limite de personas para el tour")
     }
-
+  }
   method alguienSeQuiereBajar(plata) = personasConfirmadas.any({persona => persona.meQuieroBajar(plata)})
 
-  method validarCompra(persona, _ciudades, plata) {
-    persona.lePareceBien(precioPorPersona, ciudades)
-    self.hayLugar(plata)
+  method validarCompra(persona) {
+    if (!persona.puedePagar(precio)) {
+      throw new DomainException(message = "El monto del tour no es adecuado para la persona")
+    }
   }
 
-  method agregarPersona(persona, _ciudades, plata) { 
-    self.validarCompra(persona, ciudades, plata)
+  method validarPreferencia(persona) {
+    if (!self.quiereIrATodosLosLugares(persona)) {
+      throw new DomainException(message = "Hay lugares que no son adecuados para la persona")
+    }
+  }
+
+  method quiereIrATodosLosLugares(persona) = ciudades.all({ ciudad => persona.iriaALugar(ciudad) })
+
+  method agregarPersona(persona) { 
+    self.validarCompra(persona)
+    self.validarPreferencia(persona)
+    self.hayLugar()
     personasConfirmadas.add(persona) 
   }
 
+  method bajarPersona(persona) = personasConfirmadas.remove(persona)
   method pendienteDeConfirmacion() = personasConfirmadas.size() < personasRequeridas
-  method confirmado() = personasConfirmadas.size() == personasRequeridas
   method saleEsteAnio() = fechaDeSalida.year() == calendario.hoy().year()
+  method tourCompleto() = personasConfirmadas.size() == personasRequeridas
+  method montoTotal() = precio * personasConfirmadas.size()
 
-  method montoTotal() = precioPorPersona * personasRequeridas.size()
+  method confirmado() = self.tourCompleto()
 }
 
 
 // PUNTO 4
 object reporte {
-  method toursPendientes(tours) = tours.filter({tour => tour.pendienteDeConfirmacion()})
+  const tours = [] // Fuente de verdad de los tours
 
-  method toursConfirmadosParaEsteAnio(tours) = tours.filter({tour => tour.saleEsteAnio() && tour.confirmado()})
-  method montoTotalToursConfirmadosParaEsteAnio(tours) = self.toursConfirmadosParaEsteAnio(tours).sum({tour => tour.montoTotal()})
+  method toursPendientesDeConfirmacion() = tours.filter({ tour => !tour.confirmado() })
+
+  method totalDeToursQueSalenEsteAnio() = self.toursQueSalenEsteAnio().sum({
+    tour => tour.montoTotal()
+  })
+
+  method toursQueSalenEsteAnio() = tours.filter({ tour => tour.saleEsteAnio() })
 }
 
-object calendario {
+object calendario { // Stub
   method hoy () = new Date()
 }
