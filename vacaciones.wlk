@@ -27,7 +27,6 @@ class Ciudad inherits Lugar{
 class Pueblo inherits Lugar{
   const anioFundacion
   const provincia
-  const kilometros
   
   method fundadoAntesDel1800() = anioFundacion < 1800
   method esDelLitoral() = (#{"Corrientes", "Entre Rios", "Santa Fe"}).contains(provincia)
