@@ -23,7 +23,7 @@ class Noticia {
 
     method cantidadDePalabras(string) = string.words().size()
 
-    method desarrolloCorto() = self.cantidadDePalabras(desarrollo) < 100
+    method esDeVago() = self.cantidadDePalabras(desarrollo) < 100
 
     method tituloComienzaConT() = titulo.startsWith("T")
 
@@ -64,6 +64,7 @@ class Chivo inherits Noticia {
     const importe
 
     override method condicionCopada() = importe > 2000000
+    override method esDeVago() = true
 }
 
 class Reportaje inherits Noticia {
@@ -130,7 +131,7 @@ object noticiasSensacionalistas {
 }
 
 object vago {
-    method lePareceInteresante(noticia) = noticia.desarrolloCorto()
+    method lePareceInteresante(noticia) = noticia.esDeVago()
 }
 
 object preferenciaJoseDeZer {

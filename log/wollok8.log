@@ -132,3 +132,6 @@
 {"level":"info","message":"⌛ Validating vacaciones.wlk","timeElapsed":101,"timestamp":"2024-12-12T06:31:31.188Z"}
 {"level":"info","message":"⌛ Validating testVacaciones.wtest","timeElapsed":144,"timestamp":"2024-12-12T06:31:31.332Z"}
 {"level":"info","message":"⌛ Validating asadito.wlk","timeElapsed":196,"timestamp":"2024-12-12T06:31:31.528Z"}
+{"level":"info","message":"⌛ Validating noticias.wlk","timeElapsed":104,"timestamp":"2024-12-12T06:32:29.437Z"}
+{"level":"info","message":"onRequest - WORKSPACE_URI:file:///c%3A/Users/Paz-N/OneDrive/Escritorio/PDP/Programas/practicaObjetos","timestamp":"2024-12-12T06:36:10.619Z"}
+{"level":"info","message":"⌛ Building environment","timeElapsed":118,"timestamp":"2024-12-12T06:36:11.155Z"}
