@@ -170,3 +170,14 @@
 {"level":"info","message":"onRequest - completionItem/resolve","timestamp":"2024-12-15T06:29:21.054Z"}
 {"level":"info","message":"onRequest - completionItem/resolve","timestamp":"2024-12-15T06:29:21.222Z"}
 {"level":"info","message":"⌛ Validating torneoDeMagos.wlk","timeElapsed":120,"timestamp":"2024-12-15T06:30:25.996Z"}
+{"level":"info","message":"⌛ Building environment","timeElapsed":138,"timestamp":"2024-12-15T06:33:34.194Z"}
+{"level":"info","message":"onRequest - WORKSPACE_URI:file:///c%3A/Users/Paz-N/OneDrive/Escritorio/PDP/Programas/practicaObjetos","timestamp":"2024-12-15T06:33:34.201Z"}
+{"level":"info","message":"⌛ Building environment","timeElapsed":105,"timestamp":"2024-12-15T06:33:34.307Z"}
+{"level":"info","message":"⌛ Validating torneoDeMagos.wlk","timeElapsed":126,"timestamp":"2024-12-15T06:33:35.323Z"}
+{"level":"info","message":"⌛ Building environment","timeElapsed":125,"timestamp":"2024-12-15T06:33:35.642Z"}
+{"level":"info","message":"⌛ Building environment","timeElapsed":120,"timestamp":"2024-12-15T06:33:35.763Z"}
+{"level":"info","message":"⌛ Building environment","timeElapsed":137,"timestamp":"2024-12-15T06:33:35.920Z"}
+{"level":"info","message":"⌛ Validating suenios.wlk","timeElapsed":153,"timestamp":"2024-12-15T06:33:36.073Z"}
+{"level":"info","message":"⌛ Validating noticias.wlk","timeElapsed":113,"timestamp":"2024-12-15T06:33:36.493Z"}
+{"level":"info","message":"⌛ Validating vacaciones/vacaciones.wlk","timeElapsed":104,"timestamp":"2024-12-15T06:33:36.599Z"}
+{"level":"info","message":"⌛ Validating torneoDeMagos.wlk","timeElapsed":115,"timestamp":"2024-12-15T06:34:01.180Z"}
