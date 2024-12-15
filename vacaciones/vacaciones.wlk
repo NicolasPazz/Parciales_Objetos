@@ -27,9 +27,10 @@ class Ciudad inherits Lugar{
 class Pueblo inherits Lugar{
   const anioFundacion
   const provincia
-  
+  const provinciasDelLitoral = #{"Corrientes", "Entre Rios", "Santa Fe"}
+
   method fundadoAntesDel1800() = anioFundacion < 1800
-  method esDelLitoral() = (#{"Corrientes", "Entre Rios", "Santa Fe"}).contains(provincia)
+  method esDelLitoral() = provinciasDelLitoral.contains(provincia)
 
   override method condicionParaSerDivertido() = self.esDelLitoral() || self.fundadoAntesDel1800()
   override method esTranquilo() = provincia == "La Pampa"
@@ -60,13 +61,13 @@ object raro{
 
 class Persona {
   const preferencia
-  const presuepuestoMaximo
+  const presupuestoMaximo
 
   method iriaALugar(lugar) = preferencia.iriaALugar(lugar)
 
   method reiniciarPreferencias() = preferencia.reiniciarPreferencias()
 
-  method puedePagar(monto) = monto <= presuepuestoMaximo
+  method puedePagar(monto) = monto <= presupuestoMaximo
 }
 
 // Composite
@@ -96,7 +97,7 @@ class Tour{
       throw new DomainException(message = "Se llego al limite de personas para el tour")
     }
   }
-  method alguienSeQuiereBajar(plata) = personasConfirmadas.any({persona => persona.meQuieroBajar(plata)})
+  method alguienSeQuiereBajar() = personasConfirmadas.any({persona => persona.meQuieroBajar()})
 
   method validarCompra(persona) {
     if (!persona.puedePagar(precio)) {
@@ -131,7 +132,7 @@ class Tour{
 
 // PUNTO 4
 object reporte {
-  const tours = [] // Fuente de verdad de los tours
+  const tours = [] 
 
   method toursPendientesDeConfirmacion() = tours.filter({ tour => !tour.confirmado() })
 
