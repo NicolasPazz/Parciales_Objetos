@@ -16,17 +16,15 @@ class Mago {
   method aumentarEnergia(energia_) { energia += energia_}
 
   method desafiar(mago) { 
-    if (self.leGanaA(mago)) {   // Si le gano, hay transferencia de energia
-      mago.disminuirEnergia(mago.danio())
-      self.aumentarEnergia(mago.danio())
-    }
-  } // A.2 / B.2
+    self.leGanaA(mago)
+    mago.desafiado(self)
+    self.aumentarEnergia(mago.danio())
+  }  // A.2
 
-  method leGanaA(mago) = mago.vencido(self) // El mago es vencido por mi?
-  method vencido(mago) = categoria.vencido(self, mago) // El mago me vence?
+  method leGanaA(mago) = mago.vencido(self)
+  method vencido(mago) = categoria.vencido(self, mago)
+  method desafiado(magoOGremio) { categoria.desafiado(self, magoOGremio) }
   method danio() = categoria.danio(self)
-
-  method lider() = self
 }
 
 
@@ -36,6 +34,10 @@ class Categoria {
   method vencido(receptor, atacante) = receptor.resistencia() < atacante.poderTotal()
 
   method danio(receptor) = receptor.energia() * self.porcentajePerdida()
+
+  method desafiado(receptor, atacante) {
+    receptor.disminuirEnergia(self.danio(receptor))
+  }
 }
 
 object apendices inherits Categoria{
@@ -74,7 +76,7 @@ class TunicaEpica inherits TunicaComun {
   override method poderExtraEspecifico(mago) = super(mago) + puntosFijos
 }
 
-class Amuleto { // esto deberia ser un object
+class Amuleto {
   method poderAportado(mago) = 200
 }
 
@@ -82,50 +84,40 @@ object ojota {
   method poderAportado(mago) = 10 * mago.longitudNombre()
 }
 
-
 // PUNTO B
-class Gremio inherits Mago {    // B.1
-  var property magosAfiliados   // Al menos 2
+class Gremio {    // B.1
+  var property magosAfiliados // Al menos 2
   
-  override method poderTotal() = magosAfiliados.sum { mago => mago.poderTotal() }
-  override method energia() = magosAfiliados.sum { mago => mago.energia() }
-  
-  override method resistencia() = magosAfiliados.sum { mago => mago.resistencia() }
+  method poderTotal() = magosAfiliados.sum { mago => mago.poderTotal() }
+  method energia() = magosAfiliados.sum { mago => mago.energia() }
+  method resistencia() = magosAfiliados.sum { mago => mago.resistencia() }
   method resistenciaTotal() = self.resistencia() + self.lider().resistencia()
 
-  override method vencido(mago) = self.resistenciaTotal() < mago.poderTotal()
-  // No aclara en el enunciado cual es el intercambio de energia cuando pierde un gremio, asumo que es la energia de cada uno de sus magos, que dependen de sus categorias
-  override method danio() = magosAfiliados.sum { mago => mago.danio() }
-
-  override method aumentarEnergia(energia_) { self.lider().aumentarEnergia(energia_) }
-  // No aclara en el enunciado que pasa cuando vencen a un gremio, asumo que su lider pierde la energia
-  override method disminuirEnergia(energia_) { self.lider().disminuirEnergia(energia_) }
-
-  method miembroMasPoderoso() = magosAfiliados.max { mago => mago.poderTotal() }
-  override method lider() = self.miembroMasPoderoso().lider()
-  
-  
-  override method initialize() {    // B.1
-    super()
-    self.validarCantidadDeMagos()
+  method desafiar(mago) {   // B.2
+    self.leGanaA(mago)                    // Le gano al mago?
+    mago.desafiado(self)                  // Si le gano, lo desafio
+    self.aumentarEnergia(mago.danio())    // Efecto por ganar
   }
-  method validarCantidadDeMagos() {
-    if (magosAfiliados.size() < 2) {
+
+  method leGanaA(mago) = mago.vencido(self)
+  method vencido(mago) = self.resistenciaTotal() < mago.poderTotal()
+  // No aclara en el enunciado que pasa cuando vencen un gremio, asumo que todos sus magos pierden la energia
+  method desafiado(magoOGremio) { magosAfiliados.forEach { mago => mago.disminuirEnergia(magoOGremio.danio()) } }
+  method danio() = self.poderTotal()
+
+  method lider() = magosAfiliados.max { mago => mago.poderTotal() }
+  method aumentarEnergia(energia_) { self.lider().aumentarEnergia(energia_) }
+
+  method initialize(magosAfiliados_) {    // B.1
+    self.validarCantidadDeMagos(magosAfiliados_)
+    self.magosAfiliados(magosAfiliados_)
+  }
+  method validarCantidadDeMagos(magos) {
+    if (magos.size() < 2) {
       throw new Exception(message = "No puede haber menos de 2 magos afiliados a un gremio")
     }
   }
 }
 
-
 // B.3
-
-// Gracias al composite, podemos tomar al gremio como un mago, ya que comparten la interfaz, son polimorficos.
-// Podriamos definir el metodo lider() en la clase Mago, que devuelva a el mismo, y en Gremio, que devuelva al lider del gremio.
-// Entonces en el metodo lider() de Gremio, siempre devolveriamos al lider del miembro de mayor poder, en el caso que sea un mago, sera él, y si es un gremio, se buscara recursivamente el lider hasta llegar a un mago.
-
-// EN MAGO:
-// method lider() = self
-
-// EN GREMIO:
-// method miembroMasPoderoso() = magosAfiliados.max { mago => mago.poderTotal() }
-// override method lider() = self.miembroMasPoderoso().lider()
+// Gracias al composite, podemos tomar al gremio como un mago, ya que sus metodos son polimorficos. No necesitamos definir nada mas.
