@@ -31,19 +31,19 @@ class Mago {
 
 
 class Categoria {
-  var property porcentajePerdida = 0
+  var property factorPerdida = 0
 
   method vencido(receptor, atacante) = receptor.resistencia() < atacante.poderTotal()
 
-  method danio(receptor) = receptor.energia() * self.porcentajePerdida()
+  method danio(receptor) = receptor.energia() * self.factorPerdida()
 }
 
-object apendices inherits Categoria{
-  override method porcentajePerdida() = 0.5
+object aprendiz inherits Categoria{
+  override method factorPerdida() = 0.5
 }
 
 object veterano inherits Categoria{
-  override method porcentajePerdida() = 0.25
+  override method factorPerdida() = 0.25
   
   override method vencido(receptor, atacante) = receptor.resistencia() * 1.5 <= atacante.poderTotal()
 }
