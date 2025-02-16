@@ -4,7 +4,7 @@ class Mago {
   const nombre = "mago"
   var property resistencia = 0
   var property energia = 0
-  var property categoria = apendices
+  var property categoria = aprendiz
 
   method poderTotal() = poderInnato * self.sumatoriaPoderObjetos()  // A.1
   method sumatoriaPoderObjetos() = objetosMagicos.sum { objeto => objeto.poderAportado(self) }
